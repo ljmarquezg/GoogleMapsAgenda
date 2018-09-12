@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Registro de Hoteles</title>
+    <meta name="author" content="Luis Jose Marquez Gonzalez">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <style>
+        
+    </style>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.4.4.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="js/init.js"></script>
+</head>
+<body>
+    <div data-role="page" id="paginaInicio"  data-theme="b">
+        <div data-role="header" >
+            <h1>Localizador de Hoteles</h1>
+        </div>
+        <div data-role="content" class="home">
+            <div class="ui-field-contain" style="text-align: center">
+                <h1>Inicia tu aventura</h1>
+                <div class="ui-grid-a ui-responsive">
+                    <div class="ui-block-a">
+                        <a data-role="button" class="ui-btn ui-btn-inline ui-icon-plus ui-shadow-icon ui-btn-icon-left btnPaginaRegistrarHotel" >Registrar Hotel</a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a data-role="button" class="ui-btn ui-btn-inline ui-icon-bullets ui-shadow-icon ui-btn-icon-left btnPaginaListaHotel">Lista de Hoteles</a>
+                    </div>
+                </div>
+                <img src="img/app-icon.png" style="width: 50%;margin: auto;float: none;display: block;"/>
+           </div>
+        </div>
+        <div data-role="footer" data-theme="b">
+            <p align="center">Gestionar Hotel</p>
+        </div>
+    </div>
+
+    <div data-role="page" id="paginaRegistrarHotel" data-theme="b">
+        <div data-role="header">
+            <a class="ui-btn ui-btn-icon-left ui-icon-back volver" id="listado" data-iconshadow="true">Volver</a> <h1>Gestionar Hotel</h1>
+        </div>
+        <div data-role="content">
+            <form>
+                <div class="ui-grid-a ui-responsive">
+                    <div class="ui-block-a" >
+                        <div class="ui-field-contain">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" name="nombre"/>
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="ciudad">Ciudad</label>
+                            <input type="text" id="ciudad" name="ciudad"/>
+                        </div>
+                        <div class="ui-field-contain">
+                                <label for="direccion">Direccion</label>
+                                <input type="text" id="direccion" name="direccion"/>
+                            </div>
+                        <div class="ui-field-contain">
+                            <label for="telefono">Telefono</label>
+                            <input type="text" id="telefono" name="telefono"/>
+                        </div>
+                        <div class="ui-field-contain">
+                                <label for="email">Email</label>
+                                <input type="text" id="email" name="email"/>
+                            </div>
+                        <div class="ui-field-contain">
+                            <form>
+                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                    <legend>Estrellas:</legend>
+                                    <input name="estrellas" id="estrella1" value="1" type="radio">
+                                    <label for="estrella1">★</label>
+                                    <input name="estrellas" id="estrella2" value="2" type="radio">
+                                    <label for="estrella2">★</label>
+                                    <input name="estrellas" id="estrella3" value="3" type="radio">
+                                    <label for="estrella3">★</label>
+                                    <input name="estrellas" id="estrella4" value="4" type="radio">
+                                    <label for="estrella4">★</label>
+                                    <input name="estrellas" id="estrella5" value="5" type="radio">
+                                    <label for="estrella5">★</label>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div class="ui-field-contain ui-grid-a">
+                            <div class="ui-block-a">
+                                <label for="lat">Latitud</label>
+                                <input type="text" id="lat" name="lat" readonly disabled/>
+                            </div>
+                            <div class="ui-block-b">
+                                <label for="lng">Longitud</label>
+                                <input type="text" id="lng" name="lng" readonly disabled/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div id="registroMapa" class="ui-corner-all ui-shadow">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <a class="ui-btn ui-btn-icon-left ui-icon-check ui-shadow-icon" id="btnRegistrarHotel" data-iconshadow="true" style="margin: 0 !important;">Guardar</a>
+            <a class="ui-btn ui-btn-icon-left ui-icon-back volver" data-iconshadow="true">Volver</a>
+        </div>
+        <div data-role="footer">
+            <p align="center">Gestionar Hotel</p>
+        </div>
+        <div data-role="popup" id="dialogo" style="width: 100%; ">
+                <div data-role="header">
+                    <h1 id="popupTitulo"></h1>
+                </div>
+                <div role="main" class="ui-content">
+                    <p id="popupMensaje"></p>
+                    <a href="#" class="ui-btn" data-rel="back">OK</a>
+                </div>
+            </div>
+    </div>
+
+    <div data-role="page" id="paginaListaHotel" data-theme="b">
+        <div data-role="header">
+                <a class="ui-btn ui-btn-icon-left ui-icon-back volver" id="listado" data-iconshadow="true">Volver</a> <h1>Listado de hoteles</h1>
+        </div>
+        <div data-role="content">
+            <img src="img/register.png" style="min-width: 60px; max-width: 150px;width: 100%;margin: auto;float: none;display: block;"/>
+            <div class="ui-field-contain">
+                    
+                <ul data-role="listview" data-inset="true"  data-filter="true" data-filter-placeholder="Buscar Hotel..." data-inset="true" id="listaHotel" data-count-theme="b" data-theme="a">
+                    <li data-role="list-divider">
+                        <h1>Hoteles en lista <span class="ui-li-count"></span></h1>
+                    </li>
+                </ul>
+                <a data-role="button" class="ui-btn ui-icon-plus ui-shadow-icon ui-btn-icon-left btnPaginaRegistrarHotel" >Registrar Hotel</a>
+                <a class="volver ui-btn ui-btn-icon-left ui-icon-back">Volver</a>
+            </div>
+        </div>
+        <div data-role="footer">
+                <p align="center">Listado de Hoteles</p>
+        </div>
+    </div>
+
+    <div data-role="page" id="paginaDetalleHotel" data-theme="b">
+        <div data-role="header">
+                <a class="ui-btn ui-btn-icon-left ui-icon-back btnPaginaListaHotel" data-iconshadow="true">Volver</a><h1 id="nombreHotel"></h1>
+        </div>
+        <div data-role="content" id="contenidoLista">
+            <div class="ui-grid-a ui-responsive">
+                <div class="ui-block-a">
+                    <table data-role="table" id="detalleHotel">
+                            <thead>
+                                <tr>
+                                    <td data-priority="1">Nombre</td>
+                                    <td data-priority="2">Ciudad</td>
+                                    <td data-priority="3">Dirección</td>
+                                    <td data-priority="4">Telefono</td>
+                                    <td data-priority="5">Email</td>
+                                    <td data-priority="6">Estrellas</td>
+                                    <td data-priority="7">Latitud</td>
+                                    <td data-priority="8">Longitud</td>
+                                </tr>
+                            </thead>
+                    </table>
+                </div>
+                <div class="ui-block-b">
+                    <div id="detalleHotelMapa"></div>
+                </div>
+                <p id="mensaje"></p>
+                <a data-role="button" class="ui-btn ui-icon-plus ui-shadow-icon ui-btn-icon-left btnPaginaRegistrarHotel" >Registrar Hotel</a>
+                <a class="btnPaginaListaHotel ui-btn ui-btn-icon-left ui-icon-back">Volver</a>
+            </div>
+        </div>
+        <div data-role="footer">
+                <p align="center">Detalle de hotel</p>
+        </div>
+    </div>
+</body>
+</html>

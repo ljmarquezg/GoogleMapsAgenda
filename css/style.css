@@ -1,0 +1,100 @@
+body{
+    background-color: #26c6da;
+}
+#registroMapa, #divMapa, #detalleHotelMapa{
+    width: 100%;
+    height: 400px;
+    padding: 0;
+    margin-left: 5%;
+}
+.ui-header, .ui-footer{
+    height: 50px;
+}
+.ui-content.home{
+    background-color: #26c6da;
+}
+.ui-btn{
+    min-width: 240px; 
+}
+.rating {
+    overflow: hidden;
+    display: block;
+    width: 100%;
+}
+
+.rating-input {
+    float: left;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0 0 0 -16px;
+    opacity: 0;
+}
+
+
+.ui-page-theme-b .ui-btn.ui-btn-active, html .ui-bar-b .ui-btn.ui-btn-active, html .ui-body-b .ui-btn.ui-btn-active, html body .ui-group-theme-b .ui-btn.ui-btn-active, html head + body .ui-btn.ui-btn-b.ui-btn-active, .ui-page-theme-b .ui-checkbox-on::after, html .ui-bar-b .ui-checkbox-on::after, html .ui-body-b .ui-checkbox-on::after, html body .ui-group-theme-b .ui-checkbox-on::after, .ui-btn.ui-checkbox-on.ui-btn-b::after, .ui-page-theme-b .ui-flipswitch-active, html .ui-bar-b .ui-flipswitch-active, html .ui-body-b .ui-flipswitch-active, html body .ui-group-theme-b .ui-flipswitch-active, html body .ui-flipswitch.ui-bar-b.ui-flipswitch-active, .ui-page-theme-b .ui-slider-track .ui-btn-active, html .ui-bar-b .ui-slider-track .ui-btn-active, html .ui-body-b .ui-slider-track .ui-btn-active, html body .ui-group-theme-b .ui-slider-track .ui-btn-active, html body div.ui-slider-track.ui-body-b .ui-btn-active {
+    background-color: #2ad;
+    border-color: #2ad;
+    color: #fff;
+    text-shadow: 0 1px 0 #08b;
+}
+.ui-controlgroup-controls{
+    width:auto !important;
+}
+ 
+.ui-btn.ui-radio-off, .ui-btn.ui-radio-on{
+    color: gray;
+    background-color: none !important;
+    border: none;
+    font-size: 25px;
+    line-height: 25px;
+}
+
+.ui-btn.ui-radio-off::after, .ui-btn.ui-radio-on::after {
+    content: '★ ';
+}
+
+
+.ui-btn:hover::after {
+    color: gold;
+    border: none;
+    font-size: 25px;
+    line-height: 25px;
+}
+
+.ui-page-theme-b .ui-btn.rating-star{
+    background-color: transparent;
+    /* border-color: transparent; */
+    color: #fff;
+    text-shadow: none;
+}
+
+.ui-radio .ui-btn.ui-radio-on::after {
+    background-image: none !important;
+    background-color: transparent !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-width: none !important;
+    border-style: none !important;
+}
+.active{
+    color: gold !important;
+}
+.error{
+    box-shadow:0 0 5px red;
+    background-color: white;
+}
+
+@media (max-width:768px){
+    #registroMapa, #divMapa, #detalleHotelMapa{
+        margin-left: 0;
+    }
+
+    .ui-btn {
+        padding: 0.7em 0.7em;
+    }
+
+    .ui-btn-icon-left:after{
+        display: none
+    }
+}
