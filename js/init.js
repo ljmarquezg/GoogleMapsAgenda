@@ -13,33 +13,6 @@ $(document).ready(function(){
         popupTitulo,
         popupMensaje,
         marcadorInicial;
-
-
-        var hotel1 = {
-            nombre: "Hotel2",
-            ciudad: "Colombia",
-            direccion: "sdsadsaasdads",
-            telefono: "-1546563132",
-            lat: 18,
-            lng: -131,
-            email: "asdadasdsd",
-            estrellas: 1
-        }
-
-        var hotel2 = {
-            nombre: "Hotel1",
-            ciudad: "Venezuela",
-            direccion: "sdsadsaasdads",
-            telefono: "-1546563132",
-            lat: 18,
-            lng: -131,
-            email: "asdadasdsd",
-            estrellas: 2
-        }
-
-       hoteles.push(hotel1)
-       hoteles.push(hotel2)
-
     //Parametros para Mapas
     var mapaRegistro,
         mapaLista,
@@ -74,10 +47,14 @@ $(document).ready(function(){
             ventanaInfoInicial.open(mapaRegistro, marcadorInicial);
         });
 
+        geocodeLatLng(geocoder, mapaRegistro, infowindow);
+        
         google.maps.event.addListener(marcadorInicial, "dragend", function(event){
             $("#lat").val(event.latLng.lat());
             $("#lng").val(event.latLng.lng());
             geocodeLatLng(geocoder, mapaRegistro, infowindow);
+            $("#direccion").attr("style", "");
+            $("#ciudad").attr("style", "");
         })
     }
 
@@ -104,7 +81,6 @@ $(document).ready(function(){
         });
       }
     
-
     $("#btnRegistrarHotel").click(function(){   
         var nombre = ($("#nombre").val()).trim();
         var ciudad = ($("#ciudad").val()).trim();
@@ -143,8 +119,8 @@ $(document).ready(function(){
             hoteles.push(hotel);
             popupTitulo = "Registro exitoso";
             popupMensaje = "Se ha registrado la información correctamente. <br>Actualmente existen "+hoteles.length+ " hoteles registrados";
-
             mostrarDialogo();
+
             $("#nombre").val("");
             $("#ciudad").val("");
             $("#telefono").val("");
@@ -170,13 +146,10 @@ $(document).ready(function(){
             }
              detalleHotel();
         }
-
     }
 
     function detalleHotel(){
-        if (hoteles.length == 0){
-            $("#mensajeLista").html("No existen hoteles registrados")
-        }else{
+        if (hoteles.length != 0){
             $("#mensajeLista").html("")
             $(".detalleHotel").click(function(){
                 var id = $(this).attr("id"),
@@ -282,7 +255,6 @@ $(document).ready(function(){
                 $(boton[i]).removeClass("active");
                 if ($(boton[i]).attr("for") <= position ){
                     $(boton[i]).addClass("active");
-                    console.log($(boton[i]));
                 }
              }
     });
