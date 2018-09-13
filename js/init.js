@@ -6,6 +6,26 @@ function cambiarPagina(pagina){
 
 $(document).ready(function(){
     var hoteles = [],
+        hotel1 = {
+            nombre: "Hilton Trinidad",
+            direccion: 'Lady Young Rd, Port of Spain, Trinidad and Tobago',
+            lat: 10.6719602,
+            lng: -61.5087979999998,
+            ciudad: "Colombia",
+            telefono: "email",
+            email: 'Miasdasd',
+            estrellas: 3
+        },
+        hotel2 = {
+            nombre: "Trinidad Hayyatt",
+            direccion: '1, Wrightson Rd, Port of Spain, Trinidad & Tobago',
+            lat: 10.6506061,
+            lng: -61.51650670000036,
+            ciudad: "Colombia",
+            telefono: "email",
+            email: 'Miasdasd',
+            estrellas: 3
+        },
         latInicial = 3.44595822,
         lngInicial = -76.531177,
         lat,
@@ -13,11 +33,17 @@ $(document).ready(function(){
         popupTitulo,
         popupMensaje,
         marcadorInicial;
+
+        hoteles.push(hotel1);
+        hoteles.push(hotel2);
     //Parametros para Mapas
     var mapaRegistro,
         mapaLista,
+        mapaRutas,
         latlngInicial = new google.maps.LatLng(latInicial, lngInicial),
         geocoder = new google.maps.Geocoder(),
+        directionsDisplay,
+        directionsServices = new google.maps.DirectionsService(),
         infowindow = new google.maps.InfoWindow,
         mensajeMarcadorInicial = "Mover para Seleccionar el punto en el mapa";
         ventanaInfoInicial = new google.maps.InfoWindow({
@@ -43,20 +69,68 @@ $(document).ready(function(){
             map: mapaRegistro 
         });
         
+        geocodeLatLng(geocoder, mapaRegistro, infowindow);
+
+        $('#btnUbicarMapa').on('click', function(event) {
+            event.preventDefault();
+            if (($("#nombre").val()).trim().length == 0){
+                popupTitulo = "Error";
+                popupMensaje = "El campo Nombre no puede estar vacío";
+                mostrarDialogo();
+            }else{
+                geocodeAddress(geocoder, mapaRegistro);
+            }
+        });
+
+          
         google.maps.event.addListener(marcadorInicial, "click", function(){
             ventanaInfoInicial.open(mapaRegistro, marcadorInicial);
         });
 
-        geocodeLatLng(geocoder, mapaRegistro, infowindow);
-        
         google.maps.event.addListener(marcadorInicial, "dragend", function(event){
+            moverMarcador(event)
+        })
+
+        google.maps.event.addListener(mapaRegistro, "click", function(event){
+            moverMarcador(event)
+        })
+
+        function moverMarcador(event){
             $("#lat").val(event.latLng.lat());
             $("#lng").val(event.latLng.lng());
+            var latlng = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
+            marcadorInicial.setPosition(latlng)
             geocodeLatLng(geocoder, mapaRegistro, infowindow);
             $("#direccion").attr("style", "");
             $("#ciudad").attr("style", "");
-        })
+        }
     }
+
+    function geocodeAddress(geocoder, resultsMap) {
+        $.mobile.loading("show", {
+            text: "Buscando Punto...",
+            textVisible: true,
+            theme: "a",
+            textOnly: false,
+        });
+        var address = $('#nombre').val();
+        geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+            resultsMap.setCenter(results[0].geometry.location);
+            marcadorInicial.setPosition(results[0].geometry.location);
+            // infowindow.setContent(results[0].formatted_address);
+            $("#lat").val(resultsMap.center.lat());
+            $("#lng").val(resultsMap.center.lng());
+            geocodeLatLng(geocoder, mapaRegistro, infowindow);
+            $.mobile.loading("hide");
+          } else {
+            popupTitulo = "Error";
+            popupMensaje = "Se ha generado un error: "+ status;
+            mostrarDialogo();
+            $.mobile.loading("hide");
+          }
+        });
+      }
 
     function geocodeLatLng(geocoder, map, infowindow) {
         lat = $("#lat").val();
@@ -73,10 +147,14 @@ $(document).ready(function(){
               $("#ciudad").val(ciudad)
               $("#direccion").val(direccion);
             } else {
-              window.alert('No se han encontrado resultados.');
+                popupTitulo = "Error";
+                popupMensaje = "No se han encontrado resultados.";
+                mostrarDialogo();
             }
           } else {
-            window.alert('Se ha generado un error: ' + status);
+            popupTitulo = "Error";
+            popupMensaje = "Se ha generado un error:" + status;
+            mostrarDialogo();
           }
         });
       }
@@ -207,6 +285,14 @@ $(document).ready(function(){
         $("#dialogo").popup("open");
     }
 
+    function verificarHoteles(){
+        if (hoteles.length == 0){
+            $(".btnPaginaListaHotel").addClass("ui-disabled");
+        }else{
+            $(".btnPaginaListaHotel").removeClass("ui-disabled")
+        };
+    }
+
     function obtenerEstrellas(valoracion){
         var estrellas = "";
             for (var i = 0; i < 5; i++){
@@ -218,10 +304,49 @@ $(document).ready(function(){
             }
         return estrellas
     }
-    mostrarMapa();
-    listarHoteles();
-    detalleHotel();
 
+    function llenarSelects(){
+        mapaRutas = new google.maps.Map(document.getElementById("mapaRutas"), opciones);
+        for ( var i = 0; i < hoteles.length; i++){
+             $('#rutaOrigen').append('<option value="'+i+'">'+hoteles[i].nombre+'</option>')
+             $('#rutaLlegada').append('<option value="'+i+'">'+hoteles[i].nombre+'</option>')
+        }
+        $('select').selectmenu('refresh', true);
+
+        $('#btnCalcularRuta').on('click', function(){
+            calcularRuta();
+        })
+
+        $('select').on('change', function(){
+            calcularRuta();
+        })
+    }
+
+    function calcularRuta(){
+
+        var origen = $("#rutaOrigen option:selected").val(),
+            llegada = $("#rutaLlegada option:selected").val()
+            puntoOrigen = new google.maps.LatLng(hoteles[origen].lat, hoteles[origen].lng),
+            puntoLlegada = new google.maps.LatLng(hoteles[llegada].lat, hoteles[llegada].lng);
+
+            directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(mapaRutas);
+
+        var peticion = {
+            origin: puntoOrigen,
+            destination: puntoLlegada,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+
+        directionsServices.route(peticion, function(respuesta, estado){
+            if (estado == google.maps.DirectionsStatus.OK){
+                directionsDisplay.setDirections(respuesta);
+            }else{
+                alert("Error en el servicio. "+ estado);
+            }
+        })
+    }
+   
     /**************************************************************************
                   Accion de botones
     **************************************************************************/
@@ -229,19 +354,26 @@ $(document).ready(function(){
         $(this).attr("style", "")
     });
 
-    $(".btnPaginaRegistrarHotel").click(function(){
+    $(".btnPaginaRegistrarHotel").on("click",function(){
+        verificarHoteles()
         cambiarPagina('paginaRegistrarHotel');
     });
 
-    $(".btnPaginaListaHotel").click(function(){
+    $(".btnPaginaListaHotel").on("click",function(){
         listarHoteles();
         cambiarPagina('paginaListaHotel');
         $("#listaHotel").listview("refresh");
         
     });
 
-    $(".volver").click(function(){
+    $(".volver").on("click",function(){
+        verificarHoteles();
         cambiarPagina('paginaInicio');
+    });
+
+    $("#mostrarRutas").on("click",function(){
+        cambiarPagina('paginaRutas');
+        llenarSelects();
     });
 
     $("input[name^='estrella']").bind( "change", function(event, ui) {
@@ -258,4 +390,10 @@ $(document).ready(function(){
                 }
              }
     });
+
+    verificarHoteles();
+    mostrarMapa();
+    listarHoteles();
+    detalleHotel();
+
 });

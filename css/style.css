@@ -13,14 +13,20 @@ body{
 	overflow: visible;
 	overflow-x: visible;
 }
-#registroMapa, #divMapa, #detalleHotelMapa{
+#registroMapa, #divMapa, #detalleHotelMapa, #mapaRutas{
     width: 100%;
     height: 400px;
     padding: 0;
-    margin-left: 5%;
 }
 .ui-header, .ui-footer{
     height: 50px;
+}
+[class^="ui-block"]{
+    padding: 0 2%;
+}
+#btnUbicarMapa{
+    margin: 5px;
+    float:right;
 }
 .ui-content.home{
     background-color: #26c6da;
@@ -49,7 +55,7 @@ body{
     text-shadow: 0 1px 0 #08b;
 }
 .ui-controlgroup-controls{
-    width:auto !important;
+    width:100% !important;
 }
  
 .ui-btn.ui-radio-off, .ui-btn.ui-radio-on{
@@ -94,7 +100,11 @@ body{
     box-shadow:0 0 5px red;
     background-color: white;
 }
-
+.navigation .ui-controlgroup-controls .ui-btn, .navigation .ui-controlgroup-controls .ui-last-child, .navigation .ui-controlgroup-controls .ui-first-child {
+	width: 33%;
+	padding-left: 0;
+	padding-right: 0;
+}
 @media (max-width:768px){
     #registroMapa, #divMapa, #detalleHotelMapa{
         margin-left: 0;
