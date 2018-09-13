@@ -1,8 +1,11 @@
 body{
     background-color: #26c6da;
 }
-.btnPaginaRegistrarHotel, .btnPaginaListaHotel{
-    min-width: 240px;
+.ui-header .ui-navbar .ui-btn, .ui-footer .ui-navbar .ui-btn {
+	border-top-width: 0;
+	border-bottom-width: he;
+	min-height: 20px;
+	padding-top: 35px;
 }
 .gm-style-iw{
     color: black;
@@ -24,9 +27,10 @@ body{
 [class^="ui-block"]{
     padding: 0 2%;
 }
-#btnUbicarMapa{
-    margin: 5px;
-    float:right;
+#btnUbicarMapa {
+	margin: 5px 5px 0 0;
+	float: right;
+	width: auto;
 }
 .ui-content.home{
     background-color: #26c6da;
@@ -47,7 +51,10 @@ body{
     opacity: 0;
 }
 
-
+.icon-img{
+    width: 100%;
+    max-width: 150px;
+}
 .ui-page-theme-b .ui-btn.ui-btn-active, html .ui-bar-b .ui-btn.ui-btn-active, html .ui-body-b .ui-btn.ui-btn-active, html body .ui-group-theme-b .ui-btn.ui-btn-active, html head + body .ui-btn.ui-btn-b.ui-btn-active, .ui-page-theme-b .ui-checkbox-on::after, html .ui-bar-b .ui-checkbox-on::after, html .ui-body-b .ui-checkbox-on::after, html body .ui-group-theme-b .ui-checkbox-on::after, .ui-btn.ui-checkbox-on.ui-btn-b::after, .ui-page-theme-b .ui-flipswitch-active, html .ui-bar-b .ui-flipswitch-active, html .ui-body-b .ui-flipswitch-active, html body .ui-group-theme-b .ui-flipswitch-active, html body .ui-flipswitch.ui-bar-b.ui-flipswitch-active, .ui-page-theme-b .ui-slider-track .ui-btn-active, html .ui-bar-b .ui-slider-track .ui-btn-active, html .ui-body-b .ui-slider-track .ui-btn-active, html body .ui-group-theme-b .ui-slider-track .ui-btn-active, html body div.ui-slider-track.ui-body-b .ui-btn-active {
     background-color: #2ad;
     border-color: #2ad;
@@ -55,7 +62,10 @@ body{
     text-shadow: 0 1px 0 #08b;
 }
 .ui-controlgroup-controls{
-    width:100% !important;
+    width:100%;
+}
+.estrellas .ui-controlgroup-controls{
+    width:auto !important;
 }
  
 .ui-btn.ui-radio-off, .ui-btn.ui-radio-on{
@@ -113,7 +123,12 @@ body{
         padding: 0.5em 0.5em;
     }
 
-    .ui-btn-icon-left:after{
+    #paginaInicio .ui-btn-icon-left:after, .ui-header .ui-btn-icon-left:after{
         display: none
+    }
+    #btnUbicarMapa {
+        margin: 5px 5px 0 0;
+        float: none;
+        width: 100%;
     }
 }
