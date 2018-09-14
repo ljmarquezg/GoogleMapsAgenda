@@ -21,7 +21,7 @@
 <body>
     <div data-role="page" id="paginaInicio" data-theme="b">
         <div data-role="header">
-            <h1>Localizador de Hoteles</h1>
+            <h1>Listado de hoteles favoritos</h1>
         </div>
         <div data-role="content" class="home">
             <div class="ui-field-contain" style="text-align: center">
@@ -45,11 +45,11 @@
 
             <div data-role="popup" class="dialogo" data-theme="b" style="width: 100%; ">
                 <div data-role="header">
-                    <h1 id="popupTitulo"></h1>
+                    <h1 class="popupTitulo"></h1>
                 </div>
                 <div role="main" class="ui-content">
-                    <p id="popupMensaje"></p>
-                    <a href="#" class="ui-btn" data-rel="back">OK</a>
+                    <p class="popupMensaje"></p>
+                    <a class="ui-btn" data-rel="back">OK</a>
                 </div>
             </div>
 
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div data-role="page" id="paginaRegistrarHotel" data-theme="b">
+    <div data-role="page" id="paginaRegistrarHotel" data-theme="b" class="getfooter">
         <div data-role="header">
             <a class="ui-btn ui-btn-icon-left ui-icon-home volver" data-iconshadow="true">Inicio</a>
             <h1>Gestionar Hotel</h1>
@@ -125,14 +125,23 @@
                         </div>
                     </div>
                 </div>
+                <div data-role="popup" class="dialogo" data-theme="b" style="width: 100%; ">
+                    <div data-role="header">
+                        <h1 class="popupTitulo"></h1>
+                    </div>
+                    <div role="main" class="ui-content">
+                        <p class="popupMensaje"></p>
+                        <a class="ui-btn" data-rel="back">OK</a>
+                    </div>
+                </div>
             </form>
             <div class="ui-field-contain" align="center">
                 <a class="ui-btn ui-btn-icon-right ui-icon-check ui-shadow-icon ui-btn-active" id="btnRegistrarHotel"
                     data-iconshadow="true">Guardar</a>
             </div>
         </div>
-        <div data-role="footer" class="nav-glyphish-example" data-theme="b">
-            <div data-role="navbar" class="nav-glyphish-example" data-grid="c" class="ui-responsive">
+        <div data-role="footer" class="footer-menu" data-theme="b">
+            <div data-role="navbar" data-grid="c" class="ui-responsive">
                 <ul>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-home volver">Inicio</a></li>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-plus btnPaginaRegistrarHotel">Registrar
@@ -144,18 +153,9 @@
                 </ul>
             </div>
         </div>
-        <div data-role="popup" class="dialogo" data-theme="b" style="width: 100%;">
-            <div data-role="header">
-                <h1 id="popupTitulo"></h1>
-            </div>
-            <div role="main" class="ui-content">
-                <p id="popupMensaje"></p>
-                <a href="#" class="ui-btn" data-rel="back">OK</a>
-            </div>
-        </div>
     </div>
 
-    <div data-role="page" id="paginaListaHotel" data-theme="b">
+    <div data-role="page" id="paginaListaHotel" data-theme="b" class="getfooter">
         <div data-role="header">
             <a class="ui-btn ui-btn-icon-left ui-icon-home volver" id="listado" data-iconshadow="true">Inicio</a>
             <h1>Listado de hoteles</h1>
@@ -172,8 +172,8 @@
                 </ul>
             </div>
         </div>
-        <div data-role="footer" class="nav-glyphish-example" data-theme="b">
-            <div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+        <div data-role="footer" class="footer-menu" data-theme="b">
+            <div data-role="navbar" data-grid="c">
                 <ul>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-home volver"><span
                                 class="nav-menu">Inicio</span></a></li>
@@ -188,7 +188,7 @@
         </div>
     </div>
 
-    <div data-role="page" id="paginaDetalleHotel" data-theme="b">
+    <div data-role="page" id="paginaDetalleHotel" data-theme="b" class="getfooter">
         <div data-role="header">
             <a class="ui-btn ui-btn-icon-left ui-icon-home volver" data-iconshadow="true">Inicio</a>
             <h1 id="nombreHotel"></h1>
@@ -215,10 +215,19 @@
                     <div id="detalleHotelMapa"></div>
                 </div>
             </div>
+            <div data-role="popup" class="dialogo" data-theme="b" style="width: 100%; ">
+                <div data-role="header">
+                    <h1 class="popupTitulo"></h1>
+                </div>
+                <div role="main" class="ui-content">
+                    <p class="popupMensaje"></p>
+                    <a class="ui-btn" data-rel="back">OK</a>
+                </div>
+            </div>
             <h1 align="center" id="mensajeLista"></h1 align="center">
         </div>
-        <div data-role="footer" class="nav-glyphish-example" data-theme="b">
-            <div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+        <div data-role="footer" class="footer-menu" data-theme="b">
+            <div data-role="navbar" data-grid="c">
                 <ul>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-home volver">Inicio</a></li>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-plus btnPaginaRegistrarHotel">Registrar
@@ -232,7 +241,7 @@
         </div>
     </div>
 
-    <div data-role="page" id="paginaRutas" data-theme="b">
+    <div data-role="page" id="paginaRutas" data-theme="b" class="getfooter">
         <div data-role="header">
             <h1>Mostrar Rutas</h1>
         </div>
@@ -266,17 +275,17 @@
 
             <div data-role="popup" class="dialogo" style="width: 100%; ">
                 <div data-role="header">
-                    <h1 id="popupTitulo"></h1>
+                    <h1 class="popupTitulo"></h1>
                 </div>
                 <div role="main" class="ui-content">
-                    <p id="popupMensaje"></p>
-                    <a href="#" class="ui-btn" data-rel="back">OK</a>
+                    <p class="popupMensaje"></p>
+                    <a class="ui-btn" data-rel="back">OK</a>
                 </div>
             </div>
 
         </div>
-        <div data-role="footer" class="nav-glyphish-example" data-theme="b">
-            <div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+        <div data-role="footer" class="footer-menu" data-theme="b">
+            <div data-role="navbar" data-grid="c">
                 <ul>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-home volver">Inicio</a></li>
                     <li><a data-icon="custom" data-iconshadow="true" class="ui-btn ui-shadow-icon ui-icon-plus btnPaginaRegistrarHotel">Registrar

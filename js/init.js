@@ -1,42 +1,11 @@
-function cambiarPagina(pagina){
-    $.mobile.changePage("#"+pagina,{
+function cambiarPagina(pagina) {
+    $.mobile.changePage("#" + pagina, {
         transition: "none"
     });
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     var hoteles = [],
-        hotel1 = {
-            nombre: "Hilton Trinidad",
-            direccion: 'Lady Young Rd, Port of Spain, Trinidad and Tobago',
-            lat: 10.6719602,
-            lng: -61.5087979999998,
-            ciudad: "Colombia",
-            telefono: "email",
-            email: 'Miasdasd',
-            estrellas: 3
-        },
-        hotel2 = {
-            nombre: "Trinidad Hayyatt",
-            direccion: '1, Wrightson Rd, Port of Spain, Trinidad & Tobago',
-            lat: 10.6506061,
-            lng: -61.51650670000036,
-            ciudad: "Colombia",
-            telefono: "email",
-            email: 'Miasdasd',
-            estrellas: 3
-        },
-
-        hotel3 = {
-            nombre: "Hilton España",
-            direccion: '1, Wrightson Rd, Port of Spain, Trinidad & Tobago',
-            lat: 40.4518794,
-            lng: -3.585782,
-            ciudad: "Colombia",
-            telefono: "email",
-            email: 'Miasdasd',
-            estrellas: 4
-        },
         latInicial = 3.44595822,
         lngInicial = -76.531177,
         lat,
@@ -50,11 +19,6 @@ $(document).ready(function(){
         marcadorInicial,
         disabledOn = true,
         navigatorOn = false;
-        
-
-        hoteles.push(hotel1);
-        hoteles.push(hotel2);
-        hoteles.push(hotel3);
     //Parametros para Mapas
     var mapaRegistro,
         mapaLista,
@@ -64,7 +28,7 @@ $(document).ready(function(){
         directionsDisplay,
         directionsServices = new google.maps.DirectionsService(),
         infowindow = new google.maps.InfoWindow,
-        mensajeMarcadorInicial = "Mover para Seleccionar el punto en el mapa";
+        mensajeMarcadorInicial = "Mover para Seleccionar el punto en el mapa",
         ventanaInfoInicial = new google.maps.InfoWindow({
             content: mensajeMarcadorInicial
         }),
@@ -73,11 +37,11 @@ $(document).ready(function(){
             center: latlngInicial,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-    
+
     /*************************************************************************
      *                  Funciones
      *************************************************************************/
-    function mostrarMapa(){
+    function mostrarMapa() {
         mapaRegistro = new google.maps.Map(document.getElementById("registroMapa"), opciones);
         lat = $("#lat").val(latInicial);
         lng = $("#lng").val(lngInicial);
@@ -85,36 +49,37 @@ $(document).ready(function(){
             position: latlngInicial,
             draggable: true,
             title: "Punto Referencia",
-            map: mapaRegistro 
+            map: mapaRegistro
         });
-        
+
         geocodeLatLng(geocoder, mapaRegistro, infowindow);
 
-        $('#btnUbicarMapa').on('click', function(event) {
+        $('#btnUbicarMapa').on('click', function (event) {
             event.preventDefault();
-            if (($("#nombre").val()).trim().length == 0){
+            if (($("#nombre").val()).trim().length == 0) {
                 popupTitulo = "Error";
                 popupMensaje = "El campo Nombre no puede estar vacío";
                 mostrarDialogo();
-            }else{
+                $("#nombre").addClass("error")
+            } else {
                 geocodeAddress(geocoder, mapaRegistro);
             }
         });
 
-          
-        google.maps.event.addListener(marcadorInicial, "click", function(){
+
+        google.maps.event.addListener(marcadorInicial, "click", function () {
             ventanaInfoInicial.open(mapaRegistro, marcadorInicial);
         });
 
-        google.maps.event.addListener(marcadorInicial, "dragend", function(event){
+        google.maps.event.addListener(marcadorInicial, "dragend", function (event) {
             moverMarcador(event)
         })
 
-        google.maps.event.addListener(mapaRegistro, "click", function(event){
+        google.maps.event.addListener(mapaRegistro, "click", function (event) {
             moverMarcador(event)
         })
 
-        function moverMarcador(event){
+        function moverMarcador(event) {
             $("#lat").val(event.latLng.lat());
             $("#lng").val(event.latLng.lng());
             var latlng = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
@@ -125,55 +90,64 @@ $(document).ready(function(){
         }
     }
 
+    //Obtener la ubicación utilizando google maps
     function geocodeAddress(geocoder, resultsMap) {
         showLoading("Buscando Punto...");
         var address = $('#nombre').val();
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
-            marcadorInicial.setPosition(results[0].geometry.location);
-            // infowindow.setContent(results[0].formatted_address);
-            $("#lat").val(resultsMap.center.lat());
-            $("#lng").val(resultsMap.center.lng());
-            geocodeLatLng(geocoder, mapaRegistro, infowindow);
-            hideLoading();
-          } else {
-            popupTitulo = "Error";
-            popupMensaje = "Se ha generado un error: "+ status;
-            mostrarDialogo();
-            hideLoading();
-          }
+        geocoder.geocode({
+            'address': address
+        }, function (results, status) {
+            if (status === 'OK') {
+                resultsMap.setCenter(results[0].geometry.location);
+                marcadorInicial.setPosition(results[0].geometry.location);
+                // infowindow.setContent(results[0].formatted_address);
+                $("#lat").val(resultsMap.center.lat());
+                $("#lng").val(resultsMap.center.lng());
+                geocodeLatLng(geocoder, mapaRegistro, infowindow);
+                hideLoading();
+            } else {
+                popupTitulo = "Error";
+                popupMensaje = "Se ha generado un error: " + status;
+                mostrarDialogo();
+                hideLoading();
+            }
         });
-      }
+    }
 
+    //Obetner la longitud y latitud con geocode
     function geocodeLatLng(geocoder, map, infowindow) {
         lat = $("#lat").val();
         lng = $("#lng").val();
-        var latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
-        geocoder.geocode({'location': latlng}, function(results, status) {
-          if (status === 'OK') {
-            if (results[0]) {
-              infowindow.setContent(results[0].formatted_address);
-              infowindow.open(map, marcadorInicial);
-              var direccion = ''+results[0].formatted_address+'',
-                  arregloDireccion = direccion.split(", "),
-                  ciudad = arregloDireccion.pop();
-              $("#ciudad").val(ciudad)
-              $("#direccion").val(direccion);
+        var latlng = {
+            lat: parseFloat(lat),
+            lng: parseFloat(lng)
+        };
+        geocoder.geocode({
+            'location': latlng
+        }, function (results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                    infowindow.setContent(results[0].formatted_address);
+                    infowindow.open(map, marcadorInicial);
+                    var direccion = '' + results[0].formatted_address + '',
+                        arregloDireccion = direccion.split(", "),
+                        ciudad = arregloDireccion.pop();
+                    $("#ciudad").val(ciudad)
+                    $("#direccion").val(direccion);
+                } else {
+                    popupTitulo = "Error";
+                    popupMensaje = "No se han encontrado resultados.";
+                    mostrarDialogo();
+                }
             } else {
                 popupTitulo = "Error";
-                popupMensaje = "No se han encontrado resultados.";
+                popupMensaje = "Se ha generado un error:" + status;
                 mostrarDialogo();
             }
-          } else {
-            popupTitulo = "Error";
-            popupMensaje = "Se ha generado un error:" + status;
-            mostrarDialogo();
-          }
         });
-      }
-    
-    $("#btnRegistrarHotel").click(function(){   
+    }
+
+    $("#btnRegistrarHotel").click(function () {
         var nombre = ($("#nombre").val()).trim();
         var ciudad = ($("#ciudad").val()).trim();
         var direccion = ($("#direccion").val()).trim();
@@ -182,22 +156,23 @@ $(document).ready(function(){
         var estrellas = $('input[name="estrellas"]:checked').length;
         var lat = ($("#lat").val()).trim();
         var lng = ($("#lng").val()).trim();
-        
-        if ( nombre == "" || ciudad == "" || direccion == "" || telefono == "" || email == "" || estrellas == 0 || lat == "" || lng == ""){
-            for (var i = 0; i < $("input").length ; i++){
-                if ($("input")[i].value == ""){
-                    $("input")[i].setAttribute("style", "box-shadow: 0 0 5px red; background-color: white");
+
+        if (nombre == "" || ciudad == "" || direccion == "" || telefono == "" || email == "" || estrellas == 0 || lat == "" || lng == "") {
+            for (var i = 0; i < $("input").length; i++) {
+                if ($("input")[i].value == "") {
+                    // $("input")[i].setAttribute("style", "box-shadow: 0 0 5px red; background-color: white");
+                    $("input")[i].classList.add("error");
                 }
             }
-            if(estrellas == 0){
+            if (estrellas == 0) {
                 $('.ui-controlgroup-controls').addClass("error");;
             }
             popupTitulo = "Formulario Incompleto";
             popupMensaje = "Por favor complete el formulario";
             mostrarDialogo();
-        }else{
+        } else {
             estrellas = $('input[name="estrellas"]:checked').val();
-            var hotel ={
+            var hotel = {
                 nombre: nombre,
                 ciudad: ciudad,
                 direccion: direccion,
@@ -207,10 +182,10 @@ $(document).ready(function(){
                 lat: lat,
                 lng: lng,
             };
-            
+
             hoteles.push(hotel);
             popupTitulo = "Registro exitoso";
-            popupMensaje = "Se ha registrado la información correctamente. <br>Actualmente existen "+hoteles.length+ " hoteles registrados";
+            popupMensaje = "Se ha registrado la información correctamente. <br>Actualmente existen " + hoteles.length + " hoteles registrados";
             mostrarDialogo();
 
             $("#nombre").val("");
@@ -218,39 +193,39 @@ $(document).ready(function(){
             $("#telefono").val("");
             $("#direccion").val("");
             $("#email").val("");
-            $('input[type="radio"]').removeAttr("checked").data("cacheval","false");
+            $('input[type="radio"]').removeAttr("checked").data("cacheval", "false");
             $('label[for^="estrella"]').removeClass("ui-radio-on ui-radio-active active ui-btn-active").addClass("ui-radio-off");
             verificarHoteles();
         }
     });
 
-    function listarHoteles(){
+    function listarHoteles() {
         var totalHoteles = $(hoteles).length
         $(".ui-li-count").html(totalHoteles);
         $("li.list-item").remove();
-        if (totalHoteles == 0){
+        if (totalHoteles == 0) {
             $("#listaHotel").append('<li class="list-item" id="detalle">No existen resitros guardados</li>');
-        }else{
+        } else {
             $(".list-item").remove()
-            for (var i=0; i < totalHoteles; i++){
-                var item = '<li class="list-item"><a id="'+i+'" class="detalleHotel"> <h2>'+hoteles[i].nombre+ " "+ obtenerEstrellas(hoteles[i].estrellas)+ '</h2><p><b>Ciudad: </b>'+hoteles[i].ciudad+'</p></a></li>';
+            for (var i = 0; i < totalHoteles; i++) {
+                var item = '<li class="list-item"><a id="' + i + '" class="detalleHotel"> <h2>' + hoteles[i].nombre + " " + obtenerEstrellas(hoteles[i].estrellas) + '</h2><p><b>Ciudad: </b>' + hoteles[i].ciudad + '</p></a></li>';
                 $("#listaHotel").append(item);
             }
-             detalleHotel();
+            detalleHotel();
         }
     }
 
-    function detalleHotel(){
-        if (hoteles.length != 0){
+    function detalleHotel() {
+        if (hoteles.length != 0) {
             $("#mensajeLista").html("")
-            $(".detalleHotel").click(function(){
+            $(".detalleHotel").click(function () {
                 var id = $(this).attr("id"),
                     nombreHotel = hoteles[id].nombre
-                    latHotel = hoteles[id].lat,
+                latHotel = hoteles[id].lat,
                     lngHotel = hoteles[id].lng,
                     valoracion = hoteles[id].estrellas,
                     estrellas = obtenerEstrellas(valoracion);
-                    tbody = $('<tbody class="infoHotel"></tbody>'),
+                tbody = $('<tbody class="infoHotel"></tbody>'),
                     tr = $('<tr></tr>'),
                     td1 = $('<th></th>').html(nombreHotel),
                     td2 = $('<td></td>').html(hoteles[id].ciudad),
@@ -260,22 +235,22 @@ $(document).ready(function(){
                     td6 = $('<td></td>').html(estrellas),
                     td7 = $('<td></td>').html(latHotel),
                     td8 = $('<td></td>').html(lngHotel),
-                    
+
                     $("#nombreHotel").html(nombreHotel);
-                    latlngHotel = new google.maps.LatLng(latHotel, lngHotel);
-                    mapaRegistro;
-                    mapaLista;
-                    opcionesHotel = {
-                            zoom: 5,
-                            center: latlngHotel,
-                            mapTypeId: google.maps.MapTypeId.ROADMAP
-                    }
-                    mapaRegistro = new google.maps.Map(document.getElementById("detalleHotelMapa"), opcionesHotel);
-                    marcadorRegistro = new google.maps.Marker({
-                        position: latlngHotel,
-                        draggable: false,
-                        map: mapaRegistro 
-                    });
+                latlngHotel = new google.maps.LatLng(latHotel, lngHotel);
+                mapaRegistro;
+                mapaLista;
+                opcionesHotel = {
+                    zoom: 5,
+                    center: latlngHotel,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+                mapaRegistro = new google.maps.Map(document.getElementById("detalleHotelMapa"), opcionesHotel);
+                marcadorRegistro = new google.maps.Marker({
+                    position: latlngHotel,
+                    draggable: false,
+                    map: mapaRegistro
+                });
                 $(".infoHotel").remove();
                 tr.append(td1);
                 tr.append(td2);
@@ -288,121 +263,121 @@ $(document).ready(function(){
                 tbody.append(tr);
                 $("#detalleHotel").append(tbody);
                 cambiarPagina("paginaDetalleHotel");
-                $("#detalleHotel").table( "rebuild" );
+                $("#detalleHotel").table("rebuild");
             });
         }
     }
-    
-    function mostrarDialogo(){
-        $(".dialogo").popup();
-        $("#popupMensaje").html(popupMensaje);
-        $("#popupTitulo").html(popupTitulo);
-        $(".dialogo").popup("open");
-    }
 
-    function verificarHoteles(){
-        if (hoteles.length == 0){
+    function verificarHoteles() {
+        if (hoteles.length == 0) {
             $(".btnPaginaListaHotel").addClass("ui-disabled");
             $(".mostrarRutas").addClass("ui-disabled");
-        }else{
+        } else {
             $(".btnPaginaListaHotel").removeClass("ui-disabled")
             $(".mostrarRutas").removeClass("ui-disabled")
         };
     }
 
-    function obtenerEstrellas(valoracion){
+    function obtenerEstrellas(valoracion) {
         var estrellas = "";
-            for (var i = 0; i < 5; i++){
-                if (i < valoracion){
-                    estrellas += '<span class="active">★</span>';
-                }else{
-                    estrellas += '<span>★</span>';
-                }
+        for (var i = 0; i < 5; i++) {
+            if (i < valoracion) {
+                estrellas += '<span class="active">★</span>';
+            } else {
+                estrellas += '<span>★</span>';
             }
+        }
         return estrellas
     }
 
-    function llenarSelects(){
+    function llenarSelects() {
+        $("option").remove();
         mapaRutas = new google.maps.Map(document.getElementById("mapaRutas"), opciones);
-        if (navigatorOn == true){
+        if (navigatorOn == true) {
             $('#rutaOrigen').append('<option value="actual">Posicion Actual</option>');
             $('#rutaLlegada').append('<option value="actual">Posicion Actual</option>');
         }
 
-        for ( var i = 0; i < hoteles.length; i++){
-             $('#rutaOrigen').append('<option value="'+i+'">'+hoteles[i].nombre+'</option>')
-             $('#rutaLlegada').append('<option value="'+i+'">'+hoteles[i].nombre+'</option>')
+        for (var i = 0; i < hoteles.length; i++) {
+            $('#rutaOrigen').append('<option value="' + i + '">' + hoteles[i].nombre + '</option>')
+            $('#rutaLlegada').append('<option value="' + i + '">' + hoteles[i].nombre + '</option>')
         }
 
         $('select').selectmenu('refresh', true);
 
-        $('#btnCalcularRuta').on('click', function(){
+        $('#btnCalcularRuta').on('click', function () {
             calcularRuta();
         })
 
+        //Descomentar para calcular automáticamente al cambiar los selects
         // $('select').on('change', function(){
         //     calcularRuta();
         // })
     }
 
-    function calcularRuta(){
-        showLoading("Calculando Ruta...");
+    function calcularRuta() {
         origen = $("#rutaOrigen option:selected").val(),
-        llegada = $("#rutaLlegada option:selected").val();
-        
-        if (origen == "actual"){
-            alert(lngActual)
-            latOrigen = latActual;
-            lngOrigen = lngActual;
-        }else{
-            latOrigen = hoteles[origen].lat;
-            lngOrigen =  hoteles[origen].lng;
-        }
+            llegada = $("#rutaLlegada option:selected").val();
 
-        if (llegada == "actual"){
-            latLlegada = latActual;
-            lngLlegada = lngActual;
-        }else{
-            latLlegada = hoteles[llegada].lat;
-            lngLlegada = hoteles[llegada].lng;
-        }
-        
-        puntoOrigen = new google.maps.LatLng(latOrigen, lngOrigen);
-        puntoLlegada = new google.maps.LatLng(latLlegada, lngLlegada);
-
-        directionsDisplay = new google.maps.DirectionsRenderer();
-        directionsDisplay.setMap(mapaRutas);
-
-        var peticion = {
-            origin: puntoOrigen,
-            destination: puntoLlegada,
-            travelMode: google.maps.TravelMode.DRIVING
-        };
-
-        directionsServices.route(peticion, function(respuesta, estado){
-            if (estado == google.maps.DirectionsStatus.OK){
-                directionsDisplay.setDirections(respuesta);
-            }else{
-                popupMensaje= "Error en el servicio. "+ estado
-                popupTitulo = "Navigator";
-                mostrarDialogo();
-            }
-            hideLoading();
-        })
-    }
-   
-    function exitoso(pos){
-            latActual = pos.coords.latitude;
-            lngActual = pos.coords.longitude;
-            navigatorOn = true;
-            disabledOn = false;
-            hideLoading();
-            popupTitulo = "Navigator";
-            popupMensaje = "Usuario Localizado";
+        if (origen == llegada) {
+            popupMensaje = "El punto de origen y destino no pueden ser el mismo";
+            popupTitulo = "Rutas";
             mostrarDialogo();
+            return;
+        } else {
+            showLoading("Calculando Ruta...");
+            if (origen == "actual") {
+                latOrigen = latActual;
+                lngOrigen = lngActual;
+            } else {
+                latOrigen = hoteles[origen].lat;
+                lngOrigen = hoteles[origen].lng;
+            }
+
+            if (llegada == "actual") {
+                latLlegada = latActual;
+                lngLlegada = lngActual;
+            } else {
+                latLlegada = hoteles[llegada].lat;
+                lngLlegada = hoteles[llegada].lng;
+            }
+
+            puntoOrigen = new google.maps.LatLng(latOrigen, lngOrigen);
+            puntoLlegada = new google.maps.LatLng(latLlegada, lngLlegada);
+            directionsDisplay = new google.maps.DirectionsRenderer();
+            directionsDisplay.setMap(mapaRutas);
+
+            var peticion = {
+                origin: puntoOrigen,
+                destination: puntoLlegada,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+
+            directionsServices.route(peticion, function (respuesta, estado) {
+                if (estado == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(respuesta);
+                } else {
+                    popupMensaje = "Error en el servicio. " + estado
+                    popupTitulo = "Navigator";
+                    mostrarDialogo();
+                }
+                hideLoading();
+            });
+        }
+    }
+
+    function exitoso(pos) {
+        latActual = pos.coords.latitude;
+        lngActual = pos.coords.longitude;
+        navigatorOn = true;
+        disabledOn = false;
+        hideLoading();
+        popupTitulo = "Navigator";
+        popupMensaje = "Usuario Localizado en las coordenadas Lat: " + latActual + " Lng: " + lngActual;
+        mostrarDialogo();
     };
 
-    function fallido(error){
+    function fallido(error) {
         popupTitulo = "Navigator";
         popupMensaje = error.message;;
         disabledOn = false;
@@ -410,8 +385,8 @@ $(document).ready(function(){
         mostrarDialogo();
     };
 
-    function showLoading(texto){
-        $.mobile.loading("show",{
+    function showLoading(texto) {
+        $.mobile.loading("show", {
             textOnly: false,
             textVisible: true,
             theme: "b",
@@ -419,12 +394,21 @@ $(document).ready(function(){
         })
     }
 
-    function hideLoading(){
+    function hideLoading() {
         $.mobile.loading("hide");
     }
 
-    function obtenerPosicionActual(){
-        if (navigator.geolocation){
+    function mostrarDialogo() {
+        //Obtener la página activa
+        var pagActual = $.mobile.activePage.attr("id");
+        $("#" + pagActual + " .dialogo").popup();
+        $(".popupMensaje").html(popupMensaje);
+        $(".popupTitulo").html(popupTitulo);
+        $("#" + pagActual + " .dialogo").popup("open");
+    }
+
+    function obtenerPosicionActual() {
+        if (navigator.geolocation) {
             disabledOn = true;
             navigator.geolocation.getCurrentPosition(exitoso, fallido, {
                 maximumAge: 500000,
@@ -432,60 +416,60 @@ $(document).ready(function(){
                 timeout: 6000,
             });
             showLoading("Obteniendo ubicación actual del usuario. Por favor espere.");
-        }else{
+        } else {
             alert("Tu navegador no es compatible con la geolocalización")
         }
     }
     /**************************************************************************
                   Accion de botones
     **************************************************************************/
-   $("input").focus(function(){
-        $(this).attr("style", "")
+    $("input").focus(function () {
+        $(this).removeClass("error")
     });
 
-    $(".btnPaginaRegistrarHotel").on("click",function(){
-        if (disabledOn == false){
+    $(".btnPaginaRegistrarHotel").on("click", function () {
+        if (disabledOn == false) {
             verificarHoteles()
             cambiarPagina('paginaRegistrarHotel');
         }
     });
 
-    $(".btnPaginaListaHotel").on("click",function(){
-        if (disabledOn == false){
+    $(".btnPaginaListaHotel").on("click", function () {
+        if (disabledOn == false) {
             listarHoteles();
             cambiarPagina('paginaListaHotel');
         }
         $("#listaHotel").listview("refresh");
-        
+
     });
 
-    $(".volver").on("click",function(){
-        if (disabledOn == false){
+    $(".volver").on("click", function () {
+        if (disabledOn == false) {
             verificarHoteles();
             cambiarPagina('paginaInicio');
         }
     });
 
-    $(".mostrarRutas").on("click",function(){
-        if (disabledOn == false){
+    $(".mostrarRutas").on("click", function () {
+        if (disabledOn == false) {
             cambiarPagina('paginaRutas');
             llenarSelects();
         }
     });
 
-    $("input[name^='estrella']").bind( "change", function(event, ui) {
+    $("input[name^='estrella']").bind("change", function (event, ui) {
         $('.ui-controlgroup-controls').removeClass("error");
-        var  value = $(this).attr("value"),
-             boton = $('label[for^="estrella"]'),
-             actual = $('label[for^="estrella'+value+'"]'),
-             position = actual.attr("for");
-             var total = boton.length
-             for (var i = 0; i < total ; i++){
-                $(boton[i]).removeClass("active");
-                if ($(boton[i]).attr("for") <= position ){
-                    $(boton[i]).addClass("active");
-                }
-             }
+        var value = $(this).attr("value"),
+            boton = $('label[for^="estrella"]'),
+            actual = $('label[for^="estrella' + value + '"]'),
+            position = actual.attr("for");
+        var total = boton.length
+        for (var i = 0; i < total; i++) {
+            $(boton[i]).removeClass("active");
+            if ($(boton[i]).attr("for") <= position) {
+                $(boton[i]).addClass("active");
+            }
+        }
     });
 
     verificarHoteles();

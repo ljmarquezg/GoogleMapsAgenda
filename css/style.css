@@ -1,9 +1,19 @@
 body{
     background-color: #26c6da;
 }
+.footer-menu{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999999;
+}
+.ui-content {
+	padding: 1em 1em 60px 1em;
+}
 .ui-header .ui-navbar .ui-btn, .ui-footer .ui-navbar .ui-btn {
 	border-top-width: 0;
-	border-bottom-width: he;
+	/* border-bottom-width: he; */
 	min-height: 20px;
 	padding-top: 35px;
 }
